@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <label>Nome</label>
+    <input id="nome">
+    <label>Idade</label>
+    <input id="idade" type="number">
+    <button onclick="pessoaPost()">Validar</button>
+    <div id="resultado"></div>
+    <table id="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+            </tr>
+        </thead>
+        <tbody id="tabela">
+
+        </tbody>
+    </table>
+</body>
+<script>
+    let nome = document.getElementById('nome');
+    let idade = document.getElementById('idade');
+    let resultado = document.getElementById('resultado');
+    let tabela = document.getElementById('tabela');
+    function pessoaPost() {
+        let pessoaRequest = {
+            nome:nome.value,
+            idade:parseInt(idade.value)
+        }
+        fetch('/pessoa', {
+            method:'POST',
+            body:JSON.stringify(pessoaRequest),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(resp => resp.json())
+        .then(data => {
+            resultado.innerHTML += `<h1>${data}</h1>`
+        })
+    }
+    fetch('/pessoa')
+    .then(resp => resp.json())
+    .then(data => {
+        data.forEach(pessoa=>{
+            tabela.innerHTML += `
+                <tr>
+                    <td>${pessoa.nome}</td>
+                    <td>${pessoa.idade}</td>
+                </tr>
+            `
+        })
+    })
+</script>
+
+</html>
